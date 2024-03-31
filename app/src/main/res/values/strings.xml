@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MatchMatch</string>
+    <string name="match_match">MatchMatch</string>
+    <string name="app_tag">Play, flip, match - enjoy endless fun with our Flip Card game</string>
 </resources>
