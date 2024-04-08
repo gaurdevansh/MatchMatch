@@ -5,56 +5,65 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.matchmatch.R
+import com.example.matchmatch.databinding.FragmentLevelSelectionBinding
+import com.example.matchmatch.utils.GameLevel
+import com.google.gson.Gson
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class LevelSelectionFragment : Fragment(), View.OnClickListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LevelSelectionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class LevelSelectionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentLevelSelectionBinding
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_level_selection, container, false)
+        binding = FragmentLevelSelectionBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LevelSelectionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LevelSelectionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(requireView())
+        binding.btnBeginner.setOnClickListener(this)
+        binding.btnIntermediate.setOnClickListener(this)
+        binding.btnAdvanced.setOnClickListener(this)
+        binding.btnExpert.setOnClickListener(this)
     }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            binding.btnBeginner -> {
+                val gson = Gson()
+                val json = gson.toJson(GameLevel.BEGINNER)
+                val bundle = Bundle().apply {
+                    putString("level", json)
+                }
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+            }
+            binding.btnIntermediate -> {
+                val bundle = Bundle().apply {
+                    putSerializable("level", GameLevel.INTERMEDIATE)
+                }
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+            }
+            binding.btnAdvanced -> {
+                val bundle = Bundle().apply {
+                    putSerializable("level", GameLevel.ADVANCED)
+                }
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+            }
+            binding.btnExpert -> {
+                val bundle = Bundle().apply {
+                    putSerializable("level", GameLevel.EXPERT)
+                }
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+            }
+        }
+    }
+
 }
