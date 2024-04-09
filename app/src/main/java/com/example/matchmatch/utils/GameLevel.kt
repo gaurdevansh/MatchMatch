@@ -6,3 +6,8 @@ enum class GameLevel {
     ADVANCED,
     EXPERT
 }
+
+enum class State {
+    HIDDEN,
+    FLIPPED
+}

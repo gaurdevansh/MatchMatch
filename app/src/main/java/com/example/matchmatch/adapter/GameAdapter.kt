@@ -1,13 +1,15 @@
 package com.example.matchmatch.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.matchmatch.databinding.CardItemBinding
+import com.example.matchmatch.model.CardState
 
 class GameAdapter(): RecyclerView.Adapter<GameAdapter.GameViewholder>() {
 
-    private var cardsList: MutableList<Int> = mutableListOf()
+    private var cardsList: MutableList<CardState> = mutableListOf()
 
     inner class GameViewholder(private val binding: CardItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(imageId: Int) {
@@ -26,10 +28,11 @@ class GameAdapter(): RecyclerView.Adapter<GameAdapter.GameViewholder>() {
     }
 
     override fun onBindViewHolder(holder: GameViewholder, position: Int) {
-        holder.bind(cardsList[position])
+        holder.bind(cardsList[position].image)
     }
 
-    public fun updateList(cardList: List<Int>) {
+    @SuppressLint("NotifyDataSetChanged")
+    public fun updateList(cardList: List<CardState>) {
         this.cardsList = cardList.toMutableList()
         notifyDataSetChanged()
     }

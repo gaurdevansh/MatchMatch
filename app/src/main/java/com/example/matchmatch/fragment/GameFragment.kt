@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.matchmatch.R
 import com.example.matchmatch.adapter.GameAdapter
 import com.example.matchmatch.databinding.FragmentGameBinding
+import com.example.matchmatch.model.CardState
 import com.example.matchmatch.utils.GameItemDecoration
 import com.example.matchmatch.utils.GameLevel
 import com.google.gson.Gson
@@ -20,7 +21,7 @@ class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
     private lateinit var level: GameLevel
     private lateinit var gameAdapter: GameAdapter
-    private var cardList: MutableList<Int> = mutableListOf()
+    private var cardList: MutableList<CardState> = mutableListOf()
     private lateinit var gameRecyclerView: RecyclerView
 
     override fun onCreateView(
@@ -55,12 +56,12 @@ class GameFragment : Fragment() {
 
     private fun setupCardList() {
         cardList.clear()
-        cardList.add(R.drawable.eagle)
-        cardList.add(R.drawable.squirrel)
-        cardList.add(R.drawable.tiger)
-        cardList.add(R.drawable.squirrel)
-        cardList.add(R.drawable.tiger)
-        cardList.add(R.drawable.eagle)
+        cardList.add(CardState(R.drawable.eagle))
+        cardList.add(CardState(R.drawable.squirrel))
+        cardList.add(CardState(R.drawable.tiger))
+        cardList.add(CardState(R.drawable.squirrel))
+        cardList.add(CardState(R.drawable.tiger))
+        cardList.add(CardState(R.drawable.eagle))
         gameAdapter.updateList(cardList)
     }
 }
