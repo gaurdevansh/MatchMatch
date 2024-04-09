@@ -38,10 +38,8 @@ class LevelSelectionFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             binding.btnBeginner -> {
-                val gson = Gson()
-                val json = gson.toJson(GameLevel.BEGINNER)
                 val bundle = Bundle().apply {
-                    putString("level", json)
+                    putString("level", GameLevel.BEGINNER.name)
                 }
                 navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
             }
@@ -64,6 +62,19 @@ class LevelSelectionFragment : Fragment(), View.OnClickListener {
                 navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("level", GameLevel.BEGINNER.name)
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 
 }
