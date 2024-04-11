@@ -6,5 +6,6 @@ data class CardState(
     val id: Int,
     val image: Int,
     var state: State = State.HIDDEN,
-    var isMatched: Boolean = false
+    var isMatched: Boolean = false,
+    var isEnabled: Boolean = true
 )

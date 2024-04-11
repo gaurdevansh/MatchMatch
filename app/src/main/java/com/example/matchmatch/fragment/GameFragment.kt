@@ -1,6 +1,7 @@
 package com.example.matchmatch.fragment
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.example.matchmatch.utils.GameLevel
 import com.example.matchmatch.utils.OnCardClickListener
 import com.example.matchmatch.utils.State
 import com.google.gson.Gson
+import kotlinx.coroutines.*
 
 class GameFragment : Fragment(), OnCardClickListener {
 
@@ -69,31 +71,46 @@ class GameFragment : Fragment(), OnCardClickListener {
         gameAdapter.updateList(cardList)
     }
 
+    @Suppress("DEPRECATION")
     override fun onClick(index: Int) {
+        if (cardList[index].isMatched)
+            return
+        cardList[index].state = State.FLIPPED
+        cardList.map {
+            it.isEnabled = false
+        }
+        gameAdapter.updateList(cardList)
+        Handler().postDelayed(Runnable {
+            cardList.map {
+                it.isEnabled = true
+            }
+            updateCardList(index)
+        }, 2000L)
+    }
+
+    private fun updateCardList(index: Int) {
         if (currentFlipCard == 0) {
             cardList[index].state = State.FLIPPED
             currentFlipCard = 1
             previousFlipIndex = index
             gameAdapter.updateList(cardList)
         } else if (currentFlipCard == 1) {
+            if (previousFlipIndex == index)
+                return
             if (cardList[index].id == cardList[previousFlipIndex].id) {
                 cardList[index].isMatched = true
                 cardList[previousFlipIndex].isMatched = true
                 cardList[index].state = State.FLIPPED
             } else {
                 cardList[previousFlipIndex].state = State.HIDDEN
+                cardList[index].state = State.HIDDEN
             }
             currentFlipCard = 0
             gameAdapter.updateList(cardList)
         }
     }
 
-    private fun getMatchingCardState(id: Int, index: Int): Int {
-        cardList.forEachIndexed { i, c ->
-            if (i != index && c.id == id) {
-                return i
-            }
-        }
-        return -1
+    private suspend fun pauseExecution() {
+        delay(2000L)
     }
 }

@@ -23,6 +23,7 @@ class GameAdapter(val listener: OnCardClickListener): RecyclerView.Adapter<GameA
             } else {
                 binding.ivCard.setImageResource(R.drawable.card_unflipped)
             }
+            binding.ivCard.isEnabled = card.isEnabled
             binding.ivCard.setOnClickListener {
                 listener.onClick(adapterPosition)
             }
