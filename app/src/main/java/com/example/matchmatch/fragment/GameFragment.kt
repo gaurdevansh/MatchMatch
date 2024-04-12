@@ -1,5 +1,7 @@
 package com.example.matchmatch.fragment
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
@@ -7,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.matchmatch.R
 import com.example.matchmatch.adapter.GameAdapter
@@ -17,7 +18,6 @@ import com.example.matchmatch.utils.GameItemDecoration
 import com.example.matchmatch.utils.GameLevel
 import com.example.matchmatch.utils.OnCardClickListener
 import com.example.matchmatch.utils.State
-import com.google.gson.Gson
 import kotlinx.coroutines.*
 
 class GameFragment : Fragment(), OnCardClickListener {
@@ -73,9 +73,9 @@ class GameFragment : Fragment(), OnCardClickListener {
 
     @Suppress("DEPRECATION")
     override fun onClick(index: Int) {
-        if (cardList[index].isMatched)
+        if (cardList[index].isMatched || index == previousFlipIndex)
             return
-        cardList[index].state = State.FLIPPED
+        /*cardList[index].state = State.FLIPPED
         cardList.map {
             it.isEnabled = false
         }
@@ -85,7 +85,8 @@ class GameFragment : Fragment(), OnCardClickListener {
                 it.isEnabled = true
             }
             updateCardList(index)
-        }, 2000L)
+        }, 1000L)*/
+        updateCardList(index)
     }
 
     private fun updateCardList(index: Int) {
@@ -101,6 +102,8 @@ class GameFragment : Fragment(), OnCardClickListener {
                 cardList[index].isMatched = true
                 cardList[previousFlipIndex].isMatched = true
                 cardList[index].state = State.FLIPPED
+                cardList[index].isEnabled = false
+                cardList[previousFlipIndex].isEnabled = false
             } else {
                 cardList[previousFlipIndex].state = State.HIDDEN
                 cardList[index].state = State.HIDDEN
@@ -108,9 +111,5 @@ class GameFragment : Fragment(), OnCardClickListener {
             currentFlipCard = 0
             gameAdapter.updateList(cardList)
         }
-    }
-
-    private suspend fun pauseExecution() {
-        delay(2000L)
     }
 }

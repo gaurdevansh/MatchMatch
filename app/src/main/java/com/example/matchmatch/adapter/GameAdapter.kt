@@ -1,7 +1,10 @@
 package com.example.matchmatch.adapter
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.matchmatch.R
@@ -16,16 +19,56 @@ class GameAdapter(val listener: OnCardClickListener): RecyclerView.Adapter<GameA
 
     inner class GameViewholder(private val binding: CardItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(card: CardState) {
+            binding.ivFace.setImageResource(card.image)
             if (card.state == State.FLIPPED) {
-                binding.ivCard.setImageResource(card.image)
+                binding.ivFace.visibility = View.VISIBLE
+                binding.ivRear.visibility = View.GONE
             } else if (card.isMatched) {
-                binding.ivCard.setImageResource(card.image)
-            } else {
-                binding.ivCard.setImageResource(R.drawable.card_unflipped)
+                binding.ivFace.visibility = View.VISIBLE
+                binding.ivRear.visibility = View.GONE
             }
-            binding.ivCard.isEnabled = card.isEnabled
-            binding.ivCard.setOnClickListener {
-                listener.onClick(adapterPosition)
+            if (card.isEnabled) {
+                val context = binding.root.context
+                binding.cardLayout.setOnClickListener {
+                    AnimatorInflater.loadAnimator(context, R.animator.card_flip_90).apply {
+                        setTarget(binding.ivRear)
+                        addListener(object : Animator.AnimatorListener {
+                            override fun onAnimationStart(p0: Animator) {
+                            }
+
+                            override fun onAnimationEnd(p0: Animator) {
+                                binding.ivRear.visibility = View.GONE
+                                binding.ivFace.visibility = View.VISIBLE
+                            }
+
+                            override fun onAnimationCancel(p0: Animator) {
+                            }
+
+                            override fun onAnimationRepeat(p0: Animator) {
+                            }
+
+                        })
+                        start()
+                    }
+                    AnimatorInflater.loadAnimator(context, R.animator.card_flip_180).apply {
+                        setTarget(binding.ivFace)
+                        addListener(object : Animator.AnimatorListener {
+                            override fun onAnimationStart(p0: Animator) {
+                            }
+
+                            override fun onAnimationEnd(p0: Animator) {
+                                listener.onClick(adapterPosition)
+                            }
+
+                            override fun onAnimationCancel(p0: Animator) {
+                            }
+
+                            override fun onAnimationRepeat(p0: Animator) {
+                            }
+                        })
+                        start()
+                    }
+                }
             }
         }
     }
