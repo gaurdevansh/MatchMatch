@@ -7,6 +7,6 @@
     <string name="intermediate">Intermediate</string>
     <string name="advanced">Advanced</string>
     <string name="expert">Expert</string>
-    <string name="flips">Flips :</string>
-    <string name="cards_matched">Cards Matched :</string>
+    <string name="attempts">Attempts :</string>
+    <string name="matches">Matches :</string>
 </resources>

@@ -20,20 +20,22 @@ class GameAdapter(val listener: OnCardClickListener): RecyclerView.Adapter<GameA
     inner class GameViewholder(private val binding: CardItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(card: CardState) {
             binding.ivFace.setImageResource(card.image)
-            if (card.state == State.FLIPPED) {
+            if (card.state == State.FLIPPED || card.isMatched) {
                 binding.ivFace.visibility = View.VISIBLE
                 binding.ivRear.visibility = View.GONE
-            } else if (card.isMatched) {
-                binding.ivFace.visibility = View.VISIBLE
-                binding.ivRear.visibility = View.GONE
+            } else {
+                binding.ivFace.visibility = View.GONE
+                binding.ivRear.visibility = View.VISIBLE
             }
-            if (card.isEnabled) {
                 val context = binding.root.context
+                val pos = adapterPosition
                 binding.cardLayout.setOnClickListener {
-                    AnimatorInflater.loadAnimator(context, R.animator.card_flip_90).apply {
+                    listener.onClick(pos)
+                    /*AnimatorInflater.loadAnimator(context, R.animator.card_flip_90).apply {
                         setTarget(binding.ivRear)
                         addListener(object : Animator.AnimatorListener {
                             override fun onAnimationStart(p0: Animator) {
+                                listener.resetOverlay()
                             }
 
                             override fun onAnimationEnd(p0: Animator) {
@@ -49,15 +51,16 @@ class GameAdapter(val listener: OnCardClickListener): RecyclerView.Adapter<GameA
 
                         })
                         start()
-                    }
-                    AnimatorInflater.loadAnimator(context, R.animator.card_flip_180).apply {
+                    }*/
+                    /*AnimatorInflater.loadAnimator(context, R.animator.card_flip_180).apply {
                         setTarget(binding.ivFace)
                         addListener(object : Animator.AnimatorListener {
                             override fun onAnimationStart(p0: Animator) {
                             }
 
                             override fun onAnimationEnd(p0: Animator) {
-                                listener.onClick(adapterPosition)
+                                //listener.resetOverlay()
+                                listener.onClick(pos)
                             }
 
                             override fun onAnimationCancel(p0: Animator) {
@@ -67,9 +70,10 @@ class GameAdapter(val listener: OnCardClickListener): RecyclerView.Adapter<GameA
                             }
                         })
                         start()
-                    }
+                    }*/
                 }
-            }
+
+
         }
     }
 
