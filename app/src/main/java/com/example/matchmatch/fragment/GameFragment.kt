@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.matchmatch.MainActivity
 import com.example.matchmatch.R
 import com.example.matchmatch.adapter.GameAdapter
 import com.example.matchmatch.databinding.FragmentGameBinding
@@ -34,19 +35,26 @@ class GameFragment : Fragment(), OnCardClickListener {
     private var currentMatches = 0
     private var totalFlips = 0
     private lateinit var navController: NavController
+    private var imageList = listOf(
+        CardState(1, R.drawable.eagle), CardState(1, R.drawable.eagle),
+        CardState(2, R.drawable.squirrel), CardState(2, R.drawable.squirrel),
+        CardState(3, R.drawable.tiger),  CardState(3, R.drawable.tiger),
+        CardState(4, R.drawable.elephant), CardState(4, R.drawable.elephant),
+        CardState(5, R.drawable.crocodile), CardState(5, R.drawable.crocodile),
+        CardState(6, R.drawable.shark), CardState(6, R.drawable.shark)
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val levelName = savedInstanceState?.getString("level")
-        gameLevel = levelName?.let { GameLevel.valueOf(it) } ?: GameLevel.BEGINNER
         binding = FragmentGameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        gameLevel = (context as MainActivity).getGameLevel()
         setupGame()
         navController = Navigation.findNavController(requireView())
     }
@@ -60,20 +68,46 @@ class GameFragment : Fragment(), OnCardClickListener {
     private fun setupGameRecyclerView() {
         gameRecyclerView = binding.rvGame
         gameAdapter = GameAdapter(this)
-        gameRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        setupLayoutManager()
         gameRecyclerView.addItemDecoration(GameItemDecoration(40))
         gameRecyclerView.adapter = gameAdapter
-        setupCardList()
+        setupCardList(gameLevel)
     }
 
-    private fun setupCardList() {
+    private fun setupLayoutManager() {
+        gameRecyclerView.layoutManager = when (gameLevel) {
+            GameLevel.BEGINNER -> {
+                GridLayoutManager(context, 2)
+            }
+            GameLevel.INTERMEDIATE -> {
+                GridLayoutManager(context, 2)
+            }
+            GameLevel.ADVANCED -> {
+                GridLayoutManager(context, 2)
+            }
+            else -> {
+                GridLayoutManager(context, 3)
+            }
+        }
+    }
+
+    private fun setupCardList(level: GameLevel) {
         cardList.clear()
-        cardList.add(CardState(1, R.drawable.eagle))
-        cardList.add(CardState(2, R.drawable.squirrel))
-        cardList.add(CardState(3, R.drawable.tiger))
-        cardList.add(CardState(2, R.drawable.squirrel))
-        cardList.add(CardState(3, R.drawable.tiger))
-        cardList.add(CardState(1, R.drawable.eagle))
+        cardList = when (level) {
+            GameLevel.BEGINNER -> {
+                imageList.take(6).toMutableList()
+            }
+            GameLevel.INTERMEDIATE -> {
+                imageList.take(8).toMutableList()
+            }
+            GameLevel.ADVANCED -> {
+                imageList.take(10).toMutableList()
+            }
+            else -> {
+                imageList.toMutableList()
+            }
+        }
+        cardList.shuffle()
         gameAdapter.updateList(cardList)
     }
 
@@ -142,3 +176,4 @@ class GameFragment : Fragment(), OnCardClickListener {
         cardList.clear()
     }
 }
+

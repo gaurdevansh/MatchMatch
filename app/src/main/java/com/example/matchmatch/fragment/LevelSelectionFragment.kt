@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.matchmatch.R
 import com.example.matchmatch.databinding.FragmentLevelSelectionBinding
+import com.example.matchmatch.utils.DataListener
 import com.example.matchmatch.utils.GameLevel
 import com.google.gson.Gson
 
@@ -17,6 +18,7 @@ class LevelSelectionFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentLevelSelectionBinding
     private lateinit var navController: NavController
+    private lateinit var dataListener: DataListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +31,9 @@ class LevelSelectionFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(requireView())
+        if (context is DataListener) {
+            dataListener = context as DataListener
+        }
         binding.btnBeginner.setOnClickListener(this)
         binding.btnIntermediate.setOnClickListener(this)
         binding.btnAdvanced.setOnClickListener(this)
@@ -38,35 +43,22 @@ class LevelSelectionFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             binding.btnBeginner -> {
-                val bundle = Bundle().apply {
-                    putString("level", GameLevel.BEGINNER.name)
-                }
-                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+                dataListener.onDataReceived(GameLevel.BEGINNER)
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment)
             }
             binding.btnIntermediate -> {
-                val bundle = Bundle().apply {
-                    putSerializable("level", GameLevel.INTERMEDIATE)
-                }
-                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+                dataListener.onDataReceived(GameLevel.INTERMEDIATE)
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment)
             }
             binding.btnAdvanced -> {
-                val bundle = Bundle().apply {
-                    putSerializable("level", GameLevel.ADVANCED)
-                }
-                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+                dataListener.onDataReceived(GameLevel.ADVANCED)
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment)
             }
             binding.btnExpert -> {
-                val bundle = Bundle().apply {
-                    putSerializable("level", GameLevel.EXPERT)
-                }
-                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment, bundle)
+                dataListener.onDataReceived(GameLevel.EXPERT)
+                navController.navigate(R.id.action_levelSelectionFragment_to_gameFragment)
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString("level", GameLevel.BEGINNER.name)
     }
 
     override fun onPause() {
