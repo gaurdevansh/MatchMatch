@@ -67,7 +67,7 @@ class GameFragment : Fragment(), OnCardClickListener {
 
     private fun setupGameRecyclerView() {
         gameRecyclerView = binding.rvGame
-        gameAdapter = GameAdapter(this)
+        gameAdapter = GameAdapter(this, gameLevel)
         setupLayoutManager()
         gameRecyclerView.addItemDecoration(GameItemDecoration(40))
         gameRecyclerView.adapter = gameAdapter

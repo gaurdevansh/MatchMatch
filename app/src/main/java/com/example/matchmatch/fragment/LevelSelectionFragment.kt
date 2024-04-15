@@ -60,13 +60,4 @@ class LevelSelectionFragment : Fragment(), View.OnClickListener {
             }
         }
     }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
 }

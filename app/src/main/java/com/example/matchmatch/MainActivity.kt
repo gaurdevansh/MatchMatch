@@ -28,4 +28,13 @@ class MainActivity : AppCompatActivity(), DataListener {
         return gameLevel
     }
 
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        if (navController.currentBackStackEntry?.destination?.id == R.id.gameFragment) {
+            navController.navigate(R.id.action_gameFragment_to_levelSelectionFragment)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 }
